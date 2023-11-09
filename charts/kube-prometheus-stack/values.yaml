@@ -354,7 +354,7 @@ alertmanager:
   #       {{ end }}
 
   ingress:
-    enabled: false
+    enabled: true
 
     # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
     # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
@@ -372,13 +372,13 @@ alertmanager:
 
     ## Hosts must be provided if Ingress is enabled.
     ##
-    hosts: []
-      # - alertmanager.domain.com
+    hosts:
+      - alertmanager.lesta.int
 
     ## Paths to use for ingress rules - one path should match the alertmanagerSpec.routePrefix
     ##
-    paths: []
-    # - /
+    paths:
+      - /
 
     ## For Kubernetes >= 1.18 you should specify the pathType (determines how Ingress paths should be matched)
     ## See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#better-path-matching-with-path-types
@@ -928,7 +928,7 @@ grafana:
   ingress:
     ## If true, Grafana Ingress will be created
     ##
-    enabled: false
+    enabled: true
 
     ## IngressClassName for Grafana Ingress.
     ## Should be provided if Ingress is enable.
@@ -948,9 +948,8 @@ grafana:
     ## Hostnames.
     ## Must be provided if Ingress is enable.
     ##
-    # hosts:
-    #   - grafana.domain.com
-    hosts: []
+    hosts:
+      - grafana.lesta.int
 
     ## Path for grafana ingress
     path: /
@@ -1374,10 +1373,10 @@ kubeControllerManager:
 
   ## If your kube controller manager is not deployed as a pod, specify IPs it can be found on
   ##
-  endpoints: []
-  # - 10.141.4.22
-  # - 10.141.4.23
-  # - 10.141.4.24
+  endpoints:
+    - 10.10.128.200
+    - 10.10.128.200
+    - 10.10.128.200
 
   ## If using kubeControllerManager.endpoints only the port and targetPort are used
   ##
@@ -1611,26 +1610,26 @@ kubeEtcd:
 
   ## If your etcd is not deployed as a pod, specify IPs it can be found on
   ##
-  endpoints: []
-  # - 10.141.4.22
-  # - 10.141.4.23
-  # - 10.141.4.24
+  endpoints:
+    - 10.10.128.200
+    - 10.10.128.200
+    - 10.10.128.200
 
   ## Etcd service. If using kubeEtcd.endpoints only the port and targetPort are used
   ##
   service:
     enabled: true
-    port: 2381
-    targetPort: 2381
+    port: 2379
+    targetPort: 2379
     # selector:
     #   component: etcd
 
   ## Configure secure access to the etcd cluster by loading a secret into prometheus and
   ## specifying security configuration below. For example, with a secret named etcd-client-cert
   ##
-  ## serviceMonitor:
-  ##   scheme: https
-  ##   insecureSkipVerify: false
+  serviceMonitor:
+    scheme: https
+    insecureSkipVerify: true
   ##   serverName: localhost
   ##   caFile: /etc/prometheus/secrets/etcd-client-cert/etcd-ca
   ##   certFile: /etc/prometheus/secrets/etcd-client-cert/etcd-client
@@ -1703,10 +1702,10 @@ kubeScheduler:
 
   ## If your kube scheduler is not deployed as a pod, specify IPs it can be found on
   ##
-  endpoints: []
-  # - 10.141.4.22
-  # - 10.141.4.23
-  # - 10.141.4.24
+  endpoints:
+    - 10.10.128.200
+    - 10.10.128.200
+    - 10.10.128.200
 
   ## If using kubeScheduler.endpoints only the port and targetPort are used
   ##
@@ -1792,10 +1791,10 @@ kubeProxy:
 
   ## If your kube proxy is not deployed as a pod, specify IPs it can be found on
   ##
-  endpoints: []
-  # - 10.141.4.22
-  # - 10.141.4.23
-  # - 10.141.4.24
+  endpoints:
+    - 10.10.128.200
+    - 10.10.128.200
+    - 10.10.128.200
 
   service:
     enabled: true
@@ -2751,7 +2750,7 @@ prometheus:
   #     someoneelse:$apr1$DMZX2Z4q$6SbQIfyuLQd.xmo/P0m2c.
 
   ingress:
-    enabled: false
+    enabled: true
 
     # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
     # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
@@ -2768,7 +2767,8 @@ prometheus:
     ##
     # hosts:
     #   - prometheus.domain.com
-    hosts: []
+    hosts:
+      - prometheus.lesta.int
 
     ## Paths to use for ingress rules - one path should match the prometheusSpec.routePrefix
     ##
@@ -3282,17 +3282,15 @@ prometheus:
     ## Prometheus StorageSpec for persistent data
     ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/user-guides/storage.md
     ##
-    storageSpec: {}
-    ## Using PersistentVolumeClaim
-    ##
-    #  volumeClaimTemplate:
-    #    spec:
-    #      storageClassName: gluster
-    #      accessModes: ["ReadWriteOnce"]
-    #      resources:
-    #        requests:
-    #          storage: 50Gi
-    #    selector: {}
+    storageSpec: 
+      volumeClaimTemplate:
+        spec:
+          storageClassName: "longhorn"
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 5Gi
 
     ## Using tmpfs volume
     ##
@@ -3317,7 +3315,15 @@ prometheus:
     ## The scrape configuration example below will find master nodes, provided they have the name .*mst.*, relabel the
     ## port to 2379 and allow etcd scraping provided it is running on all Kubernetes master nodes
     ##
-    additionalScrapeConfigs: []
+    additionalScrapeConfigs:
+      - job_name: ingress-controller
+        scrape_interval: 10s
+        static_configs:
+        - targets:
+          - 10.10.128.203:10254
+          - 10.10.128.204:10254
+          - 10.10.128.205:10254
+          - 10.10.128.206:10254
     # - job_name: kube-etcd
     #   kubernetes_sd_configs:
     #     - role: node
