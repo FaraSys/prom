@@ -1375,8 +1375,8 @@ kubeControllerManager:
   ##
   endpoints:
     - 10.10.128.200
-    - 10.10.128.200
-    - 10.10.128.200
+    - 10.10.128.201
+    - 10.10.128.202
 
   ## If using kubeControllerManager.endpoints only the port and targetPort are used
   ##
@@ -1612,8 +1612,8 @@ kubeEtcd:
   ##
   endpoints:
     - 10.10.128.200
-    - 10.10.128.200
-    - 10.10.128.200
+    - 10.10.128.201
+    - 10.10.128.202
 
   ## Etcd service. If using kubeEtcd.endpoints only the port and targetPort are used
   ##
@@ -1704,8 +1704,8 @@ kubeScheduler:
   ##
   endpoints:
     - 10.10.128.200
-    - 10.10.128.200
-    - 10.10.128.200
+    - 10.10.128.201
+    - 10.10.128.202
 
   ## If using kubeScheduler.endpoints only the port and targetPort are used
   ##
@@ -1793,8 +1793,8 @@ kubeProxy:
   ##
   endpoints:
     - 10.10.128.200
-    - 10.10.128.200
-    - 10.10.128.200
+    - 10.10.128.201
+    - 10.10.128.202
 
   service:
     enabled: true
