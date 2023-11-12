@@ -373,7 +373,7 @@ alertmanager:
     ## Hosts must be provided if Ingress is enabled.
     ##
     hosts:
-      - alertmanager.lesta.int
+      - alert.lesta.int
 
     ## Paths to use for ingress rules - one path should match the alertmanagerSpec.routePrefix
     ##
@@ -949,7 +949,7 @@ grafana:
     ## Must be provided if Ingress is enable.
     ##
     hosts:
-      - grafana.lesta.int
+      - graf.lesta.int
 
     ## Path for grafana ingress
     path: /
@@ -2768,7 +2768,7 @@ prometheus:
     # hosts:
     #   - prometheus.domain.com
     hosts:
-      - prometheus.lesta.int
+      - prom.lesta.int
 
     ## Paths to use for ingress rules - one path should match the prometheusSpec.routePrefix
     ##
