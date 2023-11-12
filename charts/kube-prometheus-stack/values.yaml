@@ -1664,12 +1664,12 @@ kubeEtcd:
     ## proxyUrl: URL of a proxy that should be used for scraping.
     ##
     proxyUrl: ""
-    scheme: http
-    insecureSkipVerify: false
+    scheme: https
+    insecureSkipVerify: true
+    caFile: "/etc/prometheus/secrets/k8s-etcd/ca.pem"
+    certFile: "/etc/prometheus/secrets/k8s-etcd/member-km-01.pem"
+    keyFile: "/etc/prometheus/secrets/k8s-etcd/member-km-01-key.pem"
     serverName: ""
-    caFile: ""
-    certFile: ""
-    keyFile: ""
 
     ## MetricRelabelConfigs to apply to samples after scraping, but before ingestion.
     ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#relabelconfig
@@ -3046,7 +3046,8 @@ prometheus:
     ## reflected in the running Pods. To change the secrets mounted into the Prometheus Pods, the object must be deleted and recreated
     ## with the new list of secrets.
     ##
-    secrets: []
+    secrets:
+      - k8s-etcd
 
     ## ConfigMaps is a list of ConfigMaps in the same namespace as the Prometheus object, which shall be mounted into the Prometheus Pods.
     ## The ConfigMaps are mounted into /etc/prometheus/configmaps/.
